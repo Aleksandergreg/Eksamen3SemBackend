@@ -1,7 +1,13 @@
 package org.example.eksamen3sembackend.model;
 
 import jakarta.persistence.*;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
 
+@Getter
+@Setter
+@NoArgsConstructor
 @Entity
 public class Pizza {
 
@@ -12,8 +18,7 @@ public class Pizza {
     private String title;
     private int price;
 
-    public Pizza() {
-    }
+
 
     public Pizza(String title, int price) {
         this.title = title;
@@ -21,27 +26,6 @@ public class Pizza {
     }
 
 
-    public Long getPizzaId() {
-        return pizzaId;
-    }
 
-    public void setPizzaId(Long pizzaId) {
-        this.pizzaId = pizzaId;
-    }
 
-    public String getTitle() {
-        return title;
-    }
-
-    public void setTitle(String title) {
-        this.title = title;
-    }
-
-    public int getPrice() {
-        return price;
-    }
-
-    public void setPrice(int price) {
-        this.price = price;
-    }
 }

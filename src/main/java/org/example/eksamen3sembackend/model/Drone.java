@@ -2,9 +2,15 @@ package org.example.eksamen3sembackend.model;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
 import jakarta.persistence.*;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
+
 import java.util.HashSet;
 import java.util.Set;
-
+@Getter
+@Setter
+@NoArgsConstructor
 @Entity
 public class Drone {
 
@@ -26,8 +32,7 @@ public class Drone {
     @JsonBackReference
     private Set<Delivery> deliveries = new HashSet<>();
 
-    public Drone() {
-    }
+
 
     public Drone(String publicSerialNumber, DroneStatus status) {
         this.publicSerialNumber = publicSerialNumber;
@@ -35,43 +40,4 @@ public class Drone {
     }
 
 
-    public Long getDroneId() {
-        return droneId;
-    }
-
-    public void setDroneId(Long droneId) {
-        this.droneId = droneId;
-    }
-
-    public String getPublicSerialNumber() {
-        return publicSerialNumber;
-    }
-
-    public void setPublicSerialNumber(String publicSerialNumber) {
-        this.publicSerialNumber = publicSerialNumber;
-    }
-
-    public DroneStatus getStatus() {
-        return status;
-    }
-
-    public void setStatus(DroneStatus status) {
-        this.status = status;
-    }
-
-    public Station getStation() {
-        return station;
-    }
-
-    public void setStation(Station station) {
-        this.station = station;
-    }
-
-    public Set<Delivery> getDeliveries() {
-        return deliveries;
-    }
-
-    public void setDeliveries(Set<Delivery> deliveries) {
-        this.deliveries = deliveries;
-    }
 }
