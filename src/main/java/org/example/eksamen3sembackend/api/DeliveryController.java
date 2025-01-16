@@ -26,5 +26,30 @@ public class DeliveryController {
     }
 
 
+    @PostMapping("/add")
+    public ResponseEntity<DeliveryDTO> addDelivery(@RequestBody CreateDeliveryDTO dto) {
+        return ResponseEntity.ok(deliveryService.addDelivery(dto));
+    }
+
+
+    @GetMapping("/queue")
+    public ResponseEntity<List<DeliveryDTO>> getAllUnassignedDeliveries() {
+        return ResponseEntity.ok(deliveryService.getAllUnassigned());
+    }
+
+
+    @PostMapping("/schedule")
+    public ResponseEntity<DeliveryDTO> scheduleDelivery(
+            @RequestParam Long deliveryId,
+            @RequestParam Long droneId
+    ) {
+        return ResponseEntity.ok(deliveryService.scheduleDelivery(deliveryId, droneId));
+    }
+
+
+    @PostMapping("/finish")
+    public ResponseEntity<DeliveryDTO> finishDelivery(@RequestParam Long deliveryId) {
+        return ResponseEntity.ok(deliveryService.finishDelivery(deliveryId));
+    }
 }
 
