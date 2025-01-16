@@ -27,5 +27,28 @@ public class DroneController {
     }
 
 
+    @PostMapping("/add")
+    public ResponseEntity<DroneDTO> addDrone() {
+        DroneDTO created = droneService.addDrone();
+        return ResponseEntity.ok(created);
+    }
+
+
+    @PostMapping("/enable")
+    public ResponseEntity<DroneDTO> enableDrone(@RequestParam Long id) {
+        return ResponseEntity.ok(droneService.changeDroneStatus(id, DroneStatus.I_DRIFT));
+    }
+
+
+    @PostMapping("/disable")
+    public ResponseEntity<DroneDTO> disableDrone(@RequestParam Long id) {
+        return ResponseEntity.ok(droneService.changeDroneStatus(id, DroneStatus.UDE_AF_DRIFT));
+    }
+
+
+    @PostMapping("/retire")
+    public ResponseEntity<DroneDTO> retireDrone(@RequestParam Long id) {
+        return ResponseEntity.ok(droneService.changeDroneStatus(id, DroneStatus.UDFASET));
+    }
 }
 

@@ -35,6 +35,33 @@ public class DroneService {
     }
 
 
+    public DroneDTO addDrone() {
+        List<Station> stations = stationRepository.findAll();
+        if (stations.isEmpty()) {
+            throw new ResourceNotFoundException("No stations available for the new drone");
+        }
+
+        Station stationWithFewestDrones = stations.stream()
+                .min((s1, s2) -> s1.getDrones().size() - s2.getDrones().size())
+                .orElseThrow(() -> new ResourceNotFoundException("No stations found"));
+
+        Drone drone = new Drone(
+                UUID.randomUUID().toString(),   // random public serial number
+                DroneStatus.I_DRIFT            // new drone starts "i drift"
+        );
+        drone.setStation(stationWithFewestDrones);
+
+        Drone saved = droneRepository.save(drone);
+        return mapDroneToDTO(saved);
+    }
+
+
+    public DroneDTO changeDroneStatus(Long droneId, DroneStatus newStatus) {
+        Drone drone = droneRepository.findById(droneId)
+                .orElseThrow(() -> new ResourceNotFoundException("Drone not found with id " + droneId));
+        drone.setStatus(newStatus);
+        return mapDroneToDTO(droneRepository.save(drone));
+    }
 
     private DroneDTO mapDroneToDTO(Drone drone) {
         StationDTO stationDTO = null;
