@@ -80,6 +80,15 @@ public class DeliveryService {
             throw new BadRequestException("Drone is not 'i drift' and cannot be assigned.");
         }
 
+        if (drone.getDeliveries() != null) {
+            boolean isCurrentlyFlying = drone.getDeliveries().stream()
+                    .anyMatch(d -> d.getActualDeliveryTime() == null);
+            if (isCurrentlyFlying) {
+                throw new BadRequestException("Drone is already in flight and cannot be scheduled again.");
+            }
+        }
+
+
         delivery.setDrone(drone);
         return mapDeliveryToDTO(deliveryRepository.save(delivery));
     }
