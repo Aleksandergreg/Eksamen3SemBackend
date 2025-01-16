@@ -41,9 +41,20 @@ public class DroneService {
             throw new ResourceNotFoundException("No stations available for the new drone");
         }
 
-        Station stationWithFewestDrones = stations.stream()
-                .min((s1, s2) -> s1.getDrones().size() - s2.getDrones().size())
-                .orElseThrow(() -> new ResourceNotFoundException("No stations found"));
+        Station stationWithFewestDrones = null;
+        int fewestDronesCount = Integer.MAX_VALUE;
+
+        for (Station station : stations) {
+            int stationDroneCount = station.getDrones().size();
+            if (stationDroneCount < fewestDronesCount) {
+                fewestDronesCount = stationDroneCount;
+                stationWithFewestDrones = station;
+            }
+        }
+
+        if (stationWithFewestDrones == null) {
+            throw new ResourceNotFoundException("No stations found");
+        }
 
         Drone drone = new Drone(
                 UUID.randomUUID().toString(),
@@ -54,6 +65,7 @@ public class DroneService {
         Drone saved = droneRepository.save(drone);
         return mapDroneToDTO(saved);
     }
+
 
 
     public DroneDTO changeDroneStatus(Long droneId, DroneStatus newStatus) {
