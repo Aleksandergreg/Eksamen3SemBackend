@@ -46,8 +46,8 @@ public class DroneService {
                 .orElseThrow(() -> new ResourceNotFoundException("No stations found"));
 
         Drone drone = new Drone(
-                UUID.randomUUID().toString(),   // random public serial number
-                DroneStatus.I_DRIFT            // new drone starts "i drift"
+                UUID.randomUUID().toString(),
+                DroneStatus.I_DRIFT
         );
         drone.setStation(stationWithFewestDrones);
 
