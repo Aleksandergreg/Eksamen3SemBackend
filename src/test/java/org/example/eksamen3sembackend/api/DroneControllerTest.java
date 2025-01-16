@@ -42,4 +42,50 @@ class DroneControllerTest {
                 .andExpect(jsonPath("$.publicSerialNumber").isNotEmpty());
     }
 
+    @Test
+    void testEnableDrone() throws Exception {
+        String droneJson = mockMvc.perform(post("/api/v1/drones/add"))
+                .andExpect(status().isOk())
+                .andReturn().getResponse().getContentAsString();
+
+        DroneDTO createdDrone = objectMapper.readValue(droneJson, DroneDTO.class);
+
+        mockMvc.perform(post("/api/v1/drones/disable")
+                        .param("id", String.valueOf(createdDrone.droneId())))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.status").value("UDE_AF_DRIFT"));
+
+        mockMvc.perform(post("/api/v1/drones/enable")
+                        .param("id", String.valueOf(createdDrone.droneId())))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.status").value("I_DRIFT"));
+    }
+
+    @Test
+    void testRetireDrone() throws Exception {
+        String droneJson = mockMvc.perform(post("/api/v1/drones/add"))
+                .andExpect(status().isOk())
+                .andReturn().getResponse().getContentAsString();
+
+        DroneDTO createdDrone = objectMapper.readValue(droneJson, DroneDTO.class);
+
+        mockMvc.perform(post("/api/v1/drones/retire")
+                        .param("id", String.valueOf(createdDrone.droneId())))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.status").value("UDFASET"));
+    }
+
+    @Test
+    void testDisableDrone() throws Exception {
+        String droneJson = mockMvc.perform(post("/api/v1/drones/add"))
+                .andExpect(status().isOk())
+                .andReturn().getResponse().getContentAsString();
+
+        DroneDTO createdDrone = objectMapper.readValue(droneJson, DroneDTO.class);
+
+        mockMvc.perform(post("/api/v1/drones/disable")
+                        .param("id", String.valueOf(createdDrone.droneId())))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.status").value("UDE_AF_DRIFT"));
+    }
 }

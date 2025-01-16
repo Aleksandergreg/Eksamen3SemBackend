@@ -62,4 +62,54 @@ class DeliveryControllerTest {
                 .andExpect(content().contentType(MediaType.APPLICATION_JSON));
     }
 
+    @Test
+    void testScheduleDelivery() throws Exception {
+        CreateDeliveryDTO req = new CreateDeliveryDTO(1L, "New Scheduling Address");
+        String reqJson = objectMapper.writeValueAsString(req);
+
+        String deliveryJson = mockMvc.perform(post("/api/v1/deliveries/add")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(reqJson))
+                .andExpect(status().isOk())
+                .andReturn().getResponse().getContentAsString();
+
+        DeliveryDTO createdDelivery = objectMapper.readValue(deliveryJson, DeliveryDTO.class);
+        Long createdDeliveryId = createdDelivery.deliveryId();
+
+
+        Long droneId = 1L;
+
+        mockMvc.perform(post("/api/v1/deliveries/schedule")
+                        .param("deliveryId", String.valueOf(createdDeliveryId))
+                        .param("droneId", String.valueOf(droneId)))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.deliveryId").value(createdDeliveryId))
+                .andExpect(jsonPath("$.droneId").value(droneId));
+    }
+
+    @Test
+    void testFinishDelivery() throws Exception {
+        CreateDeliveryDTO req = new CreateDeliveryDTO(1L, "Finish Address");
+        String reqJson = objectMapper.writeValueAsString(req);
+
+        String deliveryJson = mockMvc.perform(post("/api/v1/deliveries/add")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(reqJson))
+                .andExpect(status().isOk())
+                .andReturn().getResponse().getContentAsString();
+
+        DeliveryDTO createdDelivery = objectMapper.readValue(deliveryJson, DeliveryDTO.class);
+        Long createdDeliveryId = createdDelivery.deliveryId();
+
+        mockMvc.perform(post("/api/v1/deliveries/schedule")
+                        .param("deliveryId", String.valueOf(createdDeliveryId))
+                        .param("droneId", "1"))
+                .andExpect(status().isOk());
+
+        mockMvc.perform(post("/api/v1/deliveries/finish")
+                        .param("deliveryId", String.valueOf(createdDeliveryId)))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.deliveryId").value(createdDeliveryId))
+                .andExpect(jsonPath("$.actualDeliveryTime").isNotEmpty());
+    }
 }
