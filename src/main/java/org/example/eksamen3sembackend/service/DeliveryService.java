@@ -15,6 +15,7 @@ import org.example.eksamen3sembackend.repository.PizzaRepository;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.List;
 
 @Service
@@ -39,6 +40,17 @@ public class DeliveryService {
                 .filter(d -> d.getActualDeliveryTime() == null)
                 .map(this::mapDeliveryToDTO)
                 .toList();
+    }
+    public List<DeliveryDTO> getAllUndeliveredNoFunc(){
+        List<Delivery> allDeleveries = deliveryRepository.findAll();
+        List<DeliveryDTO> undilevered = new ArrayList<>();
+
+        for (Delivery delivery : allDeleveries){
+            if (delivery.getActualDeliveryTime() == null){
+                undilevered.add(mapDeliveryToDTO(delivery));
+            }
+        }
+        return undilevered;
     }
 
 
